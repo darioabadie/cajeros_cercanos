@@ -5,6 +5,8 @@ from telegram import KeyboardButton, ReplyKeyboardMarkup
 # pip install python-telegram-bot
 from cajeros_func import cajeros
 
+
+
 #ubicacion = [-34.5835311,-58.4299928]
 ubicacion = [0,0]
 
@@ -50,13 +52,17 @@ def location(bot, update):
     
     bot.send_message(chat_id=update.message.chat_id,text= "Estos son los cajeros más cercanos: ")
     res = cajeros(ubicacion,red)
+    #mapa()
+    
+
+    
     
     chat_id = update.message.chat_id
     for ind in range(0,len(res["banco"])):
         bot.send_message(chat_id=update.message.chat_id,text=res["banco"][ind] 
         + " - " + res["ubicacion"][ind]
     )
-    
+    bot.send_photo(chat_id=update.message.chat_id, photo=open('fig1.jpg', 'rb'))
     #print(current_pos)
     
 
