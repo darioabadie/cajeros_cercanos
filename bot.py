@@ -9,12 +9,12 @@ from cajeros_func import cajeros
 
 
 
+
 G_API = "AIzaSyB3LR-c3c3mEJc6xUfYLTdspFFFPJQOYC4"
 
 # visitar esta página:
 # https://developers.google.com/maps/documentation/maps-static/intro
 
-mapa = "https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284&key="+G_API
 
 
 #ubicacion = [-34.5835311,-58.4299928]
@@ -74,7 +74,10 @@ def location(bot, update):
         + " - " + res["ubicacion"][ind]
     )
     #bot.send_photo(chat_id=update.message.chat_id, photo=open('fig1.jpg', 'rb'))
-    bot.send_message(chat_id=update.message.chat_id,text= mapa)
+    
+    mensaje = mapa(ubicacion)
+    print(mensaje)
+    bot.send_message(chat_id=update.message.chat_id,text= mensaje)
     #print(current_pos)
     
 
