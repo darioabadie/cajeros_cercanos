@@ -75,7 +75,7 @@ def location(bot, update):
     )
     #bot.send_photo(chat_id=update.message.chat_id, photo=open('fig1.jpg', 'rb'))
     
-    mensaje = mapa(ubicacion)
+    mensaje = mapa(ubicacion,res)
     print(mensaje)
     bot.send_message(chat_id=update.message.chat_id,text= mensaje)
     #print(current_pos)
