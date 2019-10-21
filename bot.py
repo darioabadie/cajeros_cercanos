@@ -1,5 +1,7 @@
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, MessageHandler, Filters
 from telegram import KeyboardButton, ReplyKeyboardMarkup
+import plotly.graph_objects as go
+
 
 
 # pip install python-telegram-bot
@@ -7,10 +9,21 @@ from cajeros_func import cajeros
 
 
 
+G_API = "AIzaSyB3LR-c3c3mEJc6xUfYLTdspFFFPJQOYC4"
+
+# visitar esta página:
+# https://developers.google.com/maps/documentation/maps-static/intro
+
+mapa = "https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284&key="+G_API
+
+
 #ubicacion = [-34.5835311,-58.4299928]
 ubicacion = [0,0]
 
 TOKEN = '935739772:AAEbQdhuWxUjUH3NSZwrEi4A0EnQTnKidAA'
+
+
+
 
 def banelco(bot, update):
     
@@ -54,15 +67,14 @@ def location(bot, update):
     res = cajeros(ubicacion,red)
     #mapa()
     
-
-    
     
     chat_id = update.message.chat_id
     for ind in range(0,len(res["banco"])):
         bot.send_message(chat_id=update.message.chat_id,text=res["banco"][ind] 
         + " - " + res["ubicacion"][ind]
     )
-    bot.send_photo(chat_id=update.message.chat_id, photo=open('fig1.jpg', 'rb'))
+    #bot.send_photo(chat_id=update.message.chat_id, photo=open('fig1.jpg', 'rb'))
+    bot.send_message(chat_id=update.message.chat_id,text= mapa)
     #print(current_pos)
     
 
