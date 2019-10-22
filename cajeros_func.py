@@ -2,6 +2,9 @@
 # Librerías
 import pandas as pd 
 from geopy.distance import geodesic  
+import pickle
+from datetime import datetime, timedelta
+
 
 # Funciones
 
@@ -68,4 +71,42 @@ def mapa(centro_mapa, cajeros):
 
     # La fubnión entrega como resultado el link que contiene la dirección al mapa generado por la API de Google
     return "https://maps.googleapis.com/maps/api/staticmap?center=" + centro+ "&zoom=16&size=600x600&maptype=roadmap&" + punto_centro + puntos_cajeros + "&key="+G_API
+
+# Función que actualiza el estado de de carga de los cajeros
+def carga_cajeros():
+    
+    with open("last_request", "rb") as f: # Carga de la fecha y hora de la última consulta
+        last_request = pickle.load(f)
+
+    
+    current_request = datetime.now() # Tiempo en que se realiza la consulta actual
+    
+    interval = [dt.strftime('%a %H:%M') for dt in # Intervalo de minutos entre la úñtima consulta y la actual
+       datetime_range(last_request, current_request, 
+       timedelta(minutes=1))]
+       
+    S1 = set(interval)
+    S2 = set(["Mon 08:00", "Tue 08:00", "Wed 08:00", "Thu 08:00", "Fri 08:00"]) # Días en que se realiza una carga
+    
+    
+    if any(S1.intersection(S2)): # Si entre la última consulta y la actual hubo una fecha de carga, se reestablecen las 1000 cargas para todos los cajeros
+        data = pd.read_csv("cajeros-automaticos.csv") # Esta modificación tiene lugar sobre la base de datos (cajeros-automaticos.csv)
+        data['cargas'] = 1000
+        data.to_csv("cajeros-automaticos.csv", index = False)
+        print("Se realizó una carga!")
+    else:
+        print("Sin carga aún")
+
+    
+ # almacenamiento de la última consulta   
+ #   with open("last_request", "wb") as f:
+ #      pickle.dump(current_request, f)
+
+    
+def datetime_range(start, end, delta):
+    current = start
+    while current < end:
+        yield current
+        current += delta   
+
 

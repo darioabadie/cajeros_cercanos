@@ -76,8 +76,10 @@ def main():
     dp.add_handler(MessageHandler(Filters.location, location, edited_updates=True))      
     updater.start_polling()
     updater.idle()
+   
     
      
 
 if __name__ == '__main__':
     main()
+    print("hola")
