@@ -46,7 +46,7 @@ Finalmente el usuario recibirá el listado de los cajeros automáticos más cerc
  A contonuación se describen las tareas sugeridas para mejorar las prestaciones y eficiencia de la aplicación:
  
  * Crear un contenedor (Ej. *Docker*) con todas las dependencias necesarias para la ejecución de la aplicación.
- * Crear una base de datos relacional que contenga la información de los cajeros.
+ * Crear una base de datos relacional que contenga la información de los cajeros automáticos en la Ciudad de Buenos Aires.
  
 
 
