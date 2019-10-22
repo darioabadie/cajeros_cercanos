@@ -1,4 +1,4 @@
-#API Cajeros Cercanos
+# API Cajeros Cercanos
 En el siguiente documento se describe el funcionamiento de la aplicación **Cajeros Cercanos**. La misma tiene como objetivo mostrarle al usuario los cajeros automáticos más cercanos en tiempo real.
 
 ## Características
