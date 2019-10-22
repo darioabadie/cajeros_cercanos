@@ -3,7 +3,7 @@
 
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, MessageHandler, Filters
 from telegram import KeyboardButton, ReplyKeyboardMarkup
-from cajeros_func import cajeros
+from cajeros_func import cajeros, mapa
 
 # Token de Telegram
 
