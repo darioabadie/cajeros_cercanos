@@ -2,7 +2,7 @@
 # Librerías
 
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, MessageHandler, Filters
-from telegram import KeyboardButton, ReplyKeyboardMarkup
+from telegram import KeyboardButton, ReplyKeyboardMarkup, ParseMode
 from cajeros_func import cajeros, mapa, carga_cajeros
 
 # Token de Telegram
@@ -31,7 +31,7 @@ def link (bot, update):
     global red
     
     red  = "LINK"
-    bot.send_message(chat_id=update.message.chat_id,text= "¡Bienvenido! A continuación verás los próximos a tu ubicación.")
+    bot.send_message(chat_id=update.message.chat_id,text= "¡Bienvenido! A continuación verás los cajeros próximos a tu ubicación.")
 
     location_keyboard = KeyboardButton(text="Enviar ubicación",  request_location=True) #Creación del boton para enviar ubicación
     custom_keyboard = [[ location_keyboard]] 
@@ -66,8 +66,9 @@ def location(bot, update):
     )
     
     mensaje = mapa(ubicacion,res) # Se ejecuta la función "mapa()" que genera un mapa con los cajeros usando la API de Google
+    bot.send_message(chat_id=update.message.chat_id,text= "Link para visualizar el mapa:")
     bot.send_message(chat_id=update.message.chat_id,text= mensaje) # Como resultado se envía al usuario el link con el mapa generado.
-    
+
 
 def main():
     
