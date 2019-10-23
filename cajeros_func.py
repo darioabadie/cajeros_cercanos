@@ -57,8 +57,6 @@ def cajeros(ubicacion,red):
     cajeros = top_cajeros[['banco','ubicacion',"lat","long"]]
     cajeros = cajeros.reset_index(drop=True)
     
-       
-    
     # Descuento de extracción de un cajero cercano
     if len(cajeros["ubicacion"]) == 3: # Vector de probabilidades 70%, 20% y 10%
         probabilidades = [0.7, 0.2, 0.1]
@@ -71,8 +69,7 @@ def cajeros(ubicacion,red):
     ind = data.index[data["ubicacion"] == res]
     data["cargas"][ind] = data["cargas"][ind] -1 # Se descuenta 1 extracción al cajero elegido. 
     
-    data.to_csv("cajeros-automaticos.csv",index = False) # Se registra esta modificación en la base de datos de cajeros (cajeros-automaticos.csv). 
-    
+    data.to_csv("cajeros-automaticos.csv",index = False) # Se registra esta modificación en la base de datos de cajeros (cajeros-automaticos.csv).    
 
     return cajeros
 
