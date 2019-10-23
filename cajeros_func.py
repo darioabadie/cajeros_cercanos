@@ -98,9 +98,9 @@ def carga_cajeros():
         print("Sin carga aún")
 
     
- # almacenamiento de la última consulta   
- #   with open("last_request", "wb") as f:
- #      pickle.dump(current_request, f)
+  #almacenamiento de la última consulta   
+    with open("last_request", "wb") as f:
+       pickle.dump(current_request, f)
 
     
 def datetime_range(start, end, delta):
