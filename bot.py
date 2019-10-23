@@ -3,7 +3,7 @@
 
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, MessageHandler, Filters
 from telegram import KeyboardButton, ReplyKeyboardMarkup
-from cajeros_func import cajeros, mapa
+from cajeros_func import cajeros, mapa, carga_cajeros
 
 # Token de Telegram
 
@@ -42,6 +42,9 @@ def link (bot, update):
  
 # Función que se ejecuta cuando el usuario comparte su ubicación    
 def location(bot, update):
+    
+    carga_cajeros() # Se comprueba si hubo alguna recarga en los cajeros desde la última consulta
+    
     message = None
     if update.edited_message:
         message = update.edited_message
@@ -82,4 +85,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    print("hola")

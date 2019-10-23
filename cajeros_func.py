@@ -43,27 +43,37 @@ def cajeros(ubicacion,red):
     radio = 500
     cajeros_cercanos = data_red[data_red['distancia'] <= radio]
     
-    # Obtención de los 3 cajeros más cercanos
+    # Filtrado de los cajeros con extracciones disponibles (cargas > 0) 
+
+    cajeros_cercanos = cajeros_cercanos[cajeros_cercanos['cargas'] > 0]
+    
+    # Obtención de los 3 cajeros más cercanos con extracciones disponibles
     cajeros_cercanos = cajeros_cercanos.sort_values(by=['distancia'],ascending=True)
     top_cajeros = cajeros_cercanos[:3]
-    
+ 
     # Resultado final
+    
     global cajeros
     cajeros = top_cajeros[['banco','ubicacion',"lat","long"]]
     cajeros = cajeros.reset_index(drop=True)
     
+       
     
-    # Descuento de extracción de un cajero
-    if len(cajeros["ubicacion"]) == 3:
+    # Descuento de extracción de un cajero cercano
+    if len(cajeros["ubicacion"]) == 3: # Vector de probabilidades 70%, 20% y 10%
         probabilidades = [0.7, 0.2, 0.1]
-    elif len(cajeros["ubicacion"]) == 2:
+    elif len(cajeros["ubicacion"]) == 2: # Vector de probabilidades 75% y 25%
         probabilidades = [0.75, 0.25]
-    elif len(cajeros["ubicacion"]) == 1:
+    elif len(cajeros["ubicacion"]) == 1: # Vector de probabilidades 100%
         probabilidades = [1]
         
-    res = choice(cajeros["ubicacion"],p = probabilidades)
-    print(res)
+    res = choice(cajeros["ubicacion"],p = probabilidades) # Elección aleatoria de un cajero de acuerdo a las probabilidades
+    ind = data.index[data["ubicacion"] == res]
+    data["cargas"][ind] = data["cargas"][ind] -1 # Se descuenta 1 extracción al cajero elegido. 
     
+    data.to_csv("cajeros-automaticos.csv",index = False) # Se registra esta modificación en la base de datos de cajeros (cajeros-automaticos.csv). 
+    
+
     return cajeros
 
 # Función que genera el mapa con la ubicación del usuario y los cajeros cercanos usando la API de Google   
@@ -106,9 +116,7 @@ def carga_cajeros():
         data = pd.read_csv("cajeros-automaticos.csv") # Esta modificación tiene lugar sobre la base de datos (cajeros-automaticos.csv)
         data['cargas'] = 1000
         data.to_csv("cajeros-automaticos.csv", index = False)
-        print("Se realizó una carga!")
-    else:
-        print("Sin carga aún")
+        #print("Se realizó una carga!")
 
     
   #almacenamiento de la última consulta   
