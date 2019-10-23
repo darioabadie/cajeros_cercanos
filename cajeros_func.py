@@ -2,6 +2,10 @@
 # Librerías
 import pandas as pd 
 from geopy.distance import geodesic  
+import pickle
+from datetime import datetime, timedelta
+from numpy.random import choice
+
 
 # Funciones
 
@@ -39,15 +43,34 @@ def cajeros(ubicacion,red):
     radio = 500
     cajeros_cercanos = data_red[data_red['distancia'] <= radio]
     
-    # Obtención de los 3 cajeros más cercanos
+    # Filtrado de los cajeros con extracciones disponibles (cargas > 0) 
+
+    cajeros_cercanos = cajeros_cercanos[cajeros_cercanos['cargas'] > 0]
+    
+    # Obtención de los 3 cajeros más cercanos con extracciones disponibles
     cajeros_cercanos = cajeros_cercanos.sort_values(by=['distancia'],ascending=True)
     top_cajeros = cajeros_cercanos[:3]
-    
+ 
     # Resultado final
+    
     global cajeros
     cajeros = top_cajeros[['banco','ubicacion',"lat","long"]]
     cajeros = cajeros.reset_index(drop=True)
     
+    # Descuento de extracción de un cajero cercano
+    if len(cajeros["ubicacion"]) == 3: # Vector de probabilidades 70%, 20% y 10%
+        probabilidades = [0.7, 0.2, 0.1]
+    elif len(cajeros["ubicacion"]) == 2: # Vector de probabilidades 75% y 25%
+        probabilidades = [0.75, 0.25]
+    elif len(cajeros["ubicacion"]) == 1: # Vector de probabilidades 100%
+        probabilidades = [1]
+        
+    res = choice(cajeros["ubicacion"],p = probabilidades) # Elección aleatoria de un cajero de acuerdo a las probabilidades
+    ind = data.index[data["ubicacion"] == res]
+    data["cargas"][ind] = data["cargas"][ind] -1 # Se descuenta 1 extracción al cajero elegido. 
+    
+    data.to_csv("cajeros-automaticos.csv",index = False) # Se registra esta modificación en la base de datos de cajeros (cajeros-automaticos.csv).    
+
     return cajeros
 
 # Función que genera el mapa con la ubicación del usuario y los cajeros cercanos usando la API de Google   
@@ -68,4 +91,40 @@ def mapa(centro_mapa, cajeros):
 
     # La fubnión entrega como resultado el link que contiene la dirección al mapa generado por la API de Google
     return "https://maps.googleapis.com/maps/api/staticmap?center=" + centro+ "&zoom=16&size=600x600&maptype=roadmap&" + punto_centro + puntos_cajeros + "&key="+G_API
+
+# Función que actualiza el estado de de carga de los cajeros
+def carga_cajeros():
+    
+    with open("last_request", "rb") as f: # Carga de la fecha y hora de la última consulta
+        last_request = pickle.load(f)
+
+    
+    current_request = datetime.now() # Tiempo en que se realiza la consulta actual
+    
+    interval = [dt.strftime('%a %H:%M') for dt in # Intervalo de minutos entre la úñtima consulta y la actual
+       datetime_range(last_request, current_request, 
+       timedelta(minutes=1))]
+       
+    S1 = set(interval)
+    S2 = set(["Mon 08:00", "Tue 08:00", "Wed 08:00", "Thu 08:00", "Fri 08:00"]) # Días en que se realiza una carga
+    
+    
+    if any(S1.intersection(S2)): # Si entre la última consulta y la actual hubo una fecha de carga, se reestablecen las 1000 cargas para todos los cajeros
+        data = pd.read_csv("cajeros-automaticos.csv") # Esta modificación tiene lugar sobre la base de datos (cajeros-automaticos.csv)
+        data['cargas'] = 1000
+        data.to_csv("cajeros-automaticos.csv", index = False)
+        #print("Se realizó una carga!")
+
+    
+  #almacenamiento de la última consulta   
+    with open("last_request", "wb") as f:
+       pickle.dump(current_request, f)
+
+    
+def datetime_range(start, end, delta):
+    current = start
+    while current < end:
+        yield current
+        current += delta   
+
 
