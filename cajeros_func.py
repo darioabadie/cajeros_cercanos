@@ -4,6 +4,7 @@ import pandas as pd
 from geopy.distance import geodesic  
 import pickle
 from datetime import datetime, timedelta
+from numpy.random import choice
 
 
 # Funciones
@@ -50,6 +51,18 @@ def cajeros(ubicacion,red):
     global cajeros
     cajeros = top_cajeros[['banco','ubicacion',"lat","long"]]
     cajeros = cajeros.reset_index(drop=True)
+    
+    
+    # Descuento de extracción de un cajero
+    if len(cajeros["ubicacion"]) == 3:
+        probabilidades = [0.7, 0.2, 0.1]
+    elif len(cajeros["ubicacion"]) == 2:
+        probabilidades = [0.75, 0.25]
+    elif len(cajeros["ubicacion"]) == 1:
+        probabilidades = [1]
+        
+    res = choice(cajeros["ubicacion"],p = probabilidades)
+    print(res)
     
     return cajeros
 
