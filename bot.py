@@ -4,10 +4,10 @@
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler, MessageHandler, Filters
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ParseMode
 from cajeros_func import cajeros, mapa, carga_cajeros
+from config import TOKEN
 
-# Token de Telegram
+red = None
 
-TOKEN = '935739772:AAEbQdhuWxUjUH3NSZwrEi4A0EnQTnKidAA'
 
 # Función que responde al comando "Banelco" ingresado por el usuario
 def banelco(bot, update):
@@ -24,7 +24,6 @@ def banelco(bot, update):
                     "¿Por favor serías tan amable de compartir tu ubicación?", 
                     reply_markup=reply_markup)
  
-
 # Función que responde al comando "Link" ingresado por el usuario    
 def link (bot, update):
     
@@ -39,6 +38,7 @@ def link (bot, update):
     update.message.reply_text(
                     "¿Por favor serías tan amable de compartir tu ubicación?", 
                     reply_markup=reply_markup)
+    return
  
 # Función que se ejecuta cuando el usuario comparte su ubicación    
 def location(bot, update):
@@ -54,6 +54,8 @@ def location(bot, update):
     ubicacion = [0,0] # Ubicación del usuario (Latitud y longitud)
     ubicacion[0] =  message.location.latitude
     ubicacion[1] =  message.location.longitude
+    
+    
     
     bot.send_message(chat_id=update.message.chat_id,text= "Estos son los cajeros más cercanos: ")
     res = cajeros(ubicacion,red) # Se ejecuta la función "cajeros()" que identifica los cajeros cercanos a la ubicación del usuario.
@@ -72,6 +74,7 @@ def location(bot, update):
 
 def main():
     
+    
     # Funciones encargadas de recibir los comandos ingresados por el usuario y asignar una función a cada uno.
     updater = Updater(TOKEN)
     dp = updater.dispatcher
@@ -85,4 +88,5 @@ def main():
      
 
 if __name__ == '__main__':
+        
     main()
