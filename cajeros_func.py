@@ -7,9 +7,7 @@ from datetime import datetime, timedelta
 from numpy.random import choice
 from config import G_API
 
-
 # Funciones
-
 
 # Función que halla cajeros cercanos respecto a la ubicación del usuario
 def cajeros(ubicacion,red):
@@ -70,6 +68,7 @@ def cajeros(ubicacion,red):
 
     return cajeros
 
+
 # Función que genera el mapa con la ubicación del usuario y los cajeros cercanos usando la API de Google   
 def mapa(centro_mapa, cajeros):
     
@@ -80,46 +79,40 @@ def mapa(centro_mapa, cajeros):
     for ind in range(0,len(cajeros["banco"])): 
         puntos_cajeros = puntos_cajeros + "&markers=color:red%7Clabel:C%7C" + str(cajeros["lat"][ind])+ "," + str(cajeros["long"][ind])
 
-    # visitar esta página:
-    # https://developers.google.com/maps/documentation/maps-static/intro
-   
-
     # La fubnión entrega como resultado el link que contiene la dirección al mapa generado por la API de Google
     return "https://maps.googleapis.com/maps/api/staticmap?center=" + centro+ "&zoom=16&size=600x600&maptype=roadmap&" + punto_centro + puntos_cajeros + "&key="+G_API
+
 
 # Función que actualiza el estado de de carga de los cajeros
 def carga_cajeros():
     
-    with open("last_request", "rb") as f: # Carga de la fecha y hora de la última consulta
-        last_request = pickle.load(f)
+    with open("ultima_consulta", "rb") as f: # Carga de la fecha y hora de la última consulta
+        ultima_consulta = pickle.load(f)
 
     
-    current_request = datetime.now() # Tiempo en que se realiza la consulta actual
+    consulta_actual = datetime.now() # Tiempo en que se realiza la consulta actual
     
     interval = [dt.strftime('%a %H:%M') for dt in # Intervalo de minutos entre la úñtima consulta y la actual
-       datetime_range(last_request, current_request, 
+       rango_fechas(ultima_consulta, consulta_actual, 
        timedelta(minutes=1))]
        
     S1 = set(interval)
-    S2 = set(["Mon 08:00", "Tue 08:00", "Wed 08:00", "Thu 08:00", "Fri 08:00"]) # Días en que se realiza una carga
-    
+    S2 = set(["Mon 08:00", "Tue 08:00", "Wed 08:00", "Thu 08:00", "Fri 08:00"]) # Días en que se realiza una carga  
     
     if any(S1.intersection(S2)): # Si entre la última consulta y la actual hubo una fecha de carga, se reestablecen las 1000 cargas para todos los cajeros
         data = pd.read_csv("cajeros-automaticos.csv") # Esta modificación tiene lugar sobre la base de datos (cajeros-automaticos.csv)
         data['cargas'] = 1000
         data.to_csv("cajeros-automaticos.csv", index = False)
-        #print("Se realizó una carga!")
+    
+  #Almacenamiento de la última consulta   
+    with open("ultima_consulta", "wb") as f:
+       pickle.dump(consulta_actual, f)
 
     
-  #almacenamiento de la última consulta   
-    with open("last_request", "wb") as f:
-       pickle.dump(current_request, f)
-
-    
-def datetime_range(start, end, delta):
-    current = start
-    while current < end:
-        yield current
-        current += delta   
+def rango_fechas(comienzo, final, delta):
+    actual = comienzo
+    while actual < final:
+        yield actual
+        actual += delta   
 
 
