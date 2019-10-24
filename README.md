@@ -8,6 +8,7 @@ En el siguiente documento se describe el funcionamiento de la aplicación **Caje
 * La información se muestra con el formato **Banco - Dirección**. Ejemplo: *Banco Santander Río - JUSTO, JUAN B. AV. Y PARAGUAY* 
 * Adicionalmente el usuario recibe un mapa que muestra su ubicación y la de los cajeros cercanos.
 * El sistema realiza una estimación en tiempo real de la cantidad de extracciones que puede brindar cada cajero. En base a ello, el sistema evita mostrarle al usuario cajeros cercanos en los que no se pueden realizar extracciones.
+* El sistema es resistente a reinicios y caídas ya que almacena localmente en el servidor toda la información de los cajeros y las consultas realizadas por los usarios.
 
 ## Instalación
 
