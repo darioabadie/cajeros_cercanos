@@ -79,7 +79,7 @@ def mapa(centro_mapa, cajeros):
     for ind in range(0,len(cajeros["banco"])): 
         puntos_cajeros = puntos_cajeros + "&markers=color:red%7Clabel:C%7C" + str(cajeros["lat"][ind])+ "," + str(cajeros["long"][ind])
 
-    # La fubnión entrega como resultado el link que contiene la dirección al mapa generado por la API de Google
+    # La función entrega como resultado el link que contiene la dirección al mapa generado por la API de Google
     return "https://maps.googleapis.com/maps/api/staticmap?center=" + centro+ "&zoom=16&size=600x600&maptype=roadmap&" + punto_centro + puntos_cajeros + "&key="+G_API
 
 
