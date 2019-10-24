@@ -5,14 +5,14 @@ En el siguiente documento se describe el funcionamiento de la aplicación **Caje
 * El acceso a la aplicación se realiza a través de un **bot** de **Telegram**.
 * La aplicación muestra los cajeros dentro de un radio de 500m en función de la red de cajeros elegida (Banelco o Link).
 * La cantidad máxima de cajeros que se muestran son 3.
-* La información se muestra con el formato **Banco - Dirección**. Ejemplo: *Banco Santander Río - JUSTO, JUAN B. AV. Y PARAGUAY* 
+* La información se muestra con el formato **Banco - Dirección**. Ejemplo: *Banco Santander Río - JUSTO, JUAN B. AV. Y PARAGUAY*. 
 * Adicionalmente el usuario recibe un mapa que muestra su ubicación y la de los cajeros cercanos.
 * El sistema realiza una estimación en tiempo real de la cantidad de extracciones que puede brindar cada cajero. En base a ello, el sistema evita mostrarle al usuario cajeros cercanos en los que no se pueden realizar extracciones.
-* El sistema es resistente a reinicios y caídas ya que almacena localmente en el servidor toda la información de los cajeros y las consultas realizadas por los usarios.
+* El sistema es resistente a reinicios y caídas ya que almacena localmente en el servidor toda la información de los cajeros y las consultas realizadas por los usuarios.
 
-## Archivos del repositorio
+## Archivos del repositorio
 * **README.md** - Documentación de la aplicación.
-* **bot.py** : Algoritmo principal sobre el cual se ejecutan el Bot de Telegram.
+* **bot.py** : Algoritmo principal sobre el cual se ejecuta el Bot de Telegram.
 * **cajeros-automaticos.csv** - Dataset con la ubicación de los cajeros automáticos de la Ciudad de Buenos Aires.
 * **cajeros_func.py** - Librería que contiene funciones adicionales que ejecuta el Bot de Telegram.
 * **config.py** - Archivo de configuración en el cual se encuentran las credenciales de acceso a otras aplicaciones.
